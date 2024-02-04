@@ -2,6 +2,10 @@ from flask import Flask, jsonify, render_template, session, request, redirect, u
 from datetime import datetime
 from createjson import *
 import os.path
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6f9561e44a9ec9d8791144e3d40d0252da059a27
 
 # from events import eventsToAdd
 # from datetime import datetime
@@ -52,6 +56,22 @@ def scheduling_tasks():
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
   """
+  tasks = request.form.getlist['allSubmissions']
+  task_list = []
+
+  for task_data in tasks:
+      title = task_data.get('title')
+      priority_str = task_data.get('priority')
+      date_str = task_data.get('date')
+      hours = task_data.get('hours')
+      date = datetime.strptime(date_str, '%Y-%m-%d').date()
+
+      # Create a dictionary for each task
+      task_dict = {'title': title, 'priority': priority_str, 'date': date, 'hours': hours}
+      task_list.append(task_dict)
+
+  # Call import_tasks with the list of tasks
+  import_tasks(task_list)
   
   timeZone = "US/Eastern"
   today = datetime.datetime.today()
@@ -124,10 +144,10 @@ def scheduling_tasks():
       currStart = datetime.datetime.strptime(events[i + 1]["start"].get("dateTime", events[i]["start"].get("date")), "%Y-%m-%dT%H:%M:%S%z")
       prevEndWithTZ = prevEnd.replace(tzinfo=timezone(tz_offset))
       if currStart - prevEnd >= datetime.timedelta(hours = 1):
-        if (currStart - prevEnd > datetime.timedelta(hours = tasks[taskIndex]["hours"])):
-          currTaskEnd = prevEndWithTZ +  timedelta(hours = tasks[taskIndex]["hours"])
+        if (currStart - prevEnd > datetime.timedelta(hours = task_list[taskIndex]["hours"])):
+          currTaskEnd = prevEndWithTZ +  timedelta(hours = task_list[taskIndex]["hours"])
           event = {
-            "summary": task_tracker[taskIndex].get("name"),
+            "summary": task_list[taskIndex].get("title"),
             "start": {
               "dateTime": events[i]["end"].get("dateTime", events[i]["end"].get("date")),
               "timeZone": timeZone
@@ -138,13 +158,13 @@ def scheduling_tasks():
             }
           }
           event = service.events().insert(calendarId = "primary", body = event).execute()
-          task_tracker[taskIndex]["hours"] = 0
+          task_list[taskIndex]["hours"] = 0
           taskIndex += 1
           events.insert(i + 1, event)
         else:
           currTaskEnd = prevEndWithTZ + timedelta(hours = (currStart - prevEnd).seconds//3600)
           event = {
-            "summary": tasks[taskIndex].get("name"),
+            "summary": task_list[taskIndex].get("title"),
             "start": {
               "dateTime": events[i]["end"].get("dateTime", events[i]["end"].get("date")),
               "timeZone": timeZone
@@ -155,7 +175,7 @@ def scheduling_tasks():
             }
           }
           event = service.events().insert(calendarId = "primary", body = event).execute()
-          task_tracker[taskIndex]["hours"] = task_tracker[taskIndex]["hours"] - (currStart - prevEnd).seconds//3600
+          task_list[taskIndex]["hours"] = task_list[taskIndex]["hours"] - (currStart - prevEnd).seconds//3600
           # events.insert(i, event)
         # events = events_result.get("items", [])
         # i -= 1
@@ -166,4 +186,4 @@ def scheduling_tasks():
 
 if __name__ == "__main__":  # true if this file NOT imported
     app.debug = True        # enable auto-reload upon code change
-    app.run(host = '0.0.0.0', port=80)
+    app.run(host = '0.0.0.0', port=200)

@@ -1,7 +1,7 @@
 // import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import Header from './Header';
 
 function MyForm() {
@@ -36,83 +36,98 @@ function MyForm() {
     setSelectedDate('');
     setSelectedHours(0);
   };
-    
-    const handleFinalSubmit = async () => {
-      try {
-        // Send all submissions to the backend
-        const response = await fetch('/scheduling_tasks', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(allSubmissions)
-        });
-        // Check if request was successful
-        if (response.ok) {
-          console.log('All form data sent successfully');
-          // Clear all submissions after successful upload
-          setAllSubmissions([]);
-        } else {
-          console.error('Failed to send form data:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error sending form data:', error);
-      }
-    };
+
+  const handleFinalSubmit = async () => {
+    // try {
+    //   // Send all submissions to the backend
+    //   const response = await fetch('/scheduling_tasks', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(allSubmissions)
+    //   });
+    //   // Check if request was successful
+    //   if (response.ok) {
+    //     console.log('All form data sent successfully');
+    //     // Clear all submissions after successful upload
+    //     setAllSubmissions([]);
+    //   } else {
+    //     console.error('Failed to send form data:', response.statusText);
+    //   }
+    // } catch (error) {
+    //   console.error('Error sending form data:', error);
+    // }
+    try {
+      // Send all submissions to the backend
+      await fetch('/scheduling_tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(allSubmissions)
+      });
+      console.log('All form data sent successfully');
+      // Clear all submissions after successful upload
+      setAllSubmissions([]);
+    } catch (error) {
+      console.error('Error sending form data:', error);
+    }
+  };
 
 
   return (
     <div>
-    <form onSubmit={handleSubmit}>
-      <label>
-        Task:
-        <input
-          type="text"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Select Option:
-        <select
-          value={selectedOption}
-          onChange={(event) => setSelectedOption(event.target.value)}
-        >
-          <option value="">--Select--</option>
-          <option value="option1">Priority 1</option>
-          <option value="option2">Priority 2</option>
-          <option value="option3">Priority 3</option>
-          <option value="option4">Priority 4</option>
-          <option value="option5">Priority 5</option>
-        </select>
-      </label>
-      <br />
-      <label>
-        Select Date:
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={(event) => setSelectedDate(event.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Hours:
-        <input
-          type="number"
-          step="1" 
-          value={hoursNeeded}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSelectedHours(parseInt(event.target.value))}
-        />
-      </label>
-      <br />
-      <button type="submit">Add Task</button>
-    </form>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Task:
+          <input
+            type="text"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Select Option:
+          <select
+            value={selectedOption}
+            onChange={(event) => setSelectedOption(event.target.value)}
+          >
+            <option value="">--Select--</option>
+            <option value="option1">Priority 1</option>
+            <option value="option2">Priority 2</option>
+            <option value="option3">Priority 3</option>
+            <option value="option4">Priority 4</option>
+            <option value="option5">Priority 5</option>
+          </select>
+        </label>
+        <br />
+        <label>
+          Select Date:
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(event) => setSelectedDate(event.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Hours:
+          <input
+            type="number"
+            step="1"
+            value={hoursNeeded}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSelectedHours(parseInt(event.target.value))}
+          />
+        </label>
+        <br />
+        <button type="submit">Add Task</button>
+      </form>
 
-    {allSubmissions.length > 0 && (
-      <button onClick={handleFinalSubmit}>Schedule All Tasks</button>
-    )}
+      {allSubmissions.length > 0 && (
+        <button onClick={handleFinalSubmit}>Schedule All Tasks</button>
+      )}
     </div>
   );
 }
@@ -120,14 +135,14 @@ function MyForm() {
 function App() {
   return (
     <div className='bColor'>
-    <div className="App">
-      <Header title="cosmos"></Header>
-      <p>Enter tasks as needed. For each task, input the name, priority where 1
-        is the highest, date the task is due, and number of expected hours the 
-        task should take.
-      </p>
-    </div>
-    <MyForm /> {/* Render the MyForm component here */}
+      <div className="App">
+        <Header title="cosmos"></Header>
+        <p>Enter tasks as needed. For each task, input the name, priority where 1
+          is the highest, date the task is due, and number of expected hours the
+          task should take.
+        </p>
+      </div>
+      <MyForm /> {/* Render the MyForm component here */}
     </div>
   );
 }
