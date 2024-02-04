@@ -11,43 +11,58 @@ function MyForm() {
   const [selectedDate, setSelectedDate] = useState('');
   const [hoursNeeded, setSelectedHours] = useState(0);
 
+  const [allSubmissions, setAllSubmissions] = useState<{ title: string; priority: string; date: string; hours: number; }[]>([]);
+
   // Handle form submission
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //han
-    const formData = new FormData();
-    formData.append('title', name);
-    formData.append('priority', selectedOption);
-    formData.append('date', selectedDate);
-    formData.append('hours', String(hoursNeeded));
 
-    
+    // if (isNaN(hoursNeeded)) {
+    //   console.error('Please enter a valid number for hours');
+    //   return; // Prevent submission if hoursNeeded is NaN
+    // }
 
-    try {
-      // Send form data to the Flask backend
-      const response = await fetch('/update_tasks', {
-        method: 'POST',
-        body: formData
-      });
+    const newSubmission = {
+      title: name,
+      priority: selectedOption,
+      date: selectedDate,
+      hours: hoursNeeded
+    };
 
-      // Check if request was successful
-      if (response.ok) {
-        console.log('Form data sent successfully');
-        // Clear form fields
-        setName('');
-        setSelectedOption('');
-        setSelectedDate('');
-        setSelectedHours(0);
-      } else {
-        console.error('Failed to send form data:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error sending form data:', error);
-    }
+    setAllSubmissions([...allSubmissions, newSubmission]);
+
+    setName('');
+    setSelectedOption('');
+    setSelectedDate('');
+    setSelectedHours(0);
   };
+    
+    const handleFinalSubmit = async () => {
+      try {
+        // Send all submissions to the backend
+        const response = await fetch('/update_tasks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(allSubmissions)
+        });
+        // Check if request was successful
+        if (response.ok) {
+          console.log('All form data sent successfully');
+          // Clear all submissions after successful upload
+          setAllSubmissions([]);
+        } else {
+          console.error('Failed to send form data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error sending form data:', error);
+      }
+    };
 
 
   return (
+    <div>
     <form onSubmit={handleSubmit}>
       <label>
         Task:
@@ -85,14 +100,20 @@ function MyForm() {
       <label>
         Hours:
         <input
-          type="number" // Use type "number" for integer input
+          type="number"
+          step="1" 
           value={hoursNeeded}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSelectedHours(parseInt(event.target.value))}
         />
       </label>
       <br />
-      <button type="submit">Submit</button>
+      <button type="submit">Add Task</button>
     </form>
+
+    {allSubmissions.length > 0 && (
+      <button onClick={handleFinalSubmit}>Schedule All Tasks</button>
+    )}
+    </div>
   );
 }
 
@@ -100,7 +121,11 @@ function App() {
   return (
     <div className='bColor'>
     <div className="App">
-      <Header title="cosmos1"></Header>
+      <Header title="cosmos"></Header>
+      <p>Enter tasks as needed. For each task, input the name, priority where 1
+        is the highest, date the task is due, and number of expected hours the 
+        task should take.
+      </p>
     </div>
     <MyForm /> {/* Render the MyForm component here */}
     </div>
