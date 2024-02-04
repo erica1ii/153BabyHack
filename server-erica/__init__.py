@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, render_template, session, request, redirect, url_for, abort
-from datetime import datetime
+import datetime
 from createjson import *
 import os.path
+from flask_cors import CORS, cross_origin
 
 
 # from events import eventsToAdd
@@ -21,39 +22,42 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 # front-end will prob do fetch (API)
 
 app = Flask(__name__)
+CORS(app, support_credentials=True)
 
 # return error 404 for good practice
 # @app.route('/')
 # def home():
 #    return 404
 
-@app.route('/add_tasks', methods=['POST'])
-def add_tasks():
-    tasks = request.form.getlist['allSubmissions']
-    task_list = []
+# @app.route('/add_tasks', methods=['POST'])
+# def add_tasks():
+#     tasks = request.form.getlist['allSubmissions']
+#     task_list = []
 
-    for task_data in tasks:
-        title = task_data.get('title')
-        priority_str = task_data.get('priority')
-        date_str = task_data.get('date')
-        hours = task_data.get('hours')
-        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+#     for task_data in tasks:
+#         title = task_data.get('title')
+#         priority_str = task_data.get('priority')
+#         date_str = task_data.get('date')
+#         hours = task_data.get('hours')
+#         date = datetime.strptime(date_str, '%Y-%m-%d').date()
 
-        # Create a dictionary for each task
-        task_dict = {'title': title, 'priority': priority_str, 'date': date, 'hours': hours}
-        task_list.append(task_dict)
+#         # Create a dictionary for each task
+#         task_dict = {'title': title, 'priority': priority_str, 'date': date, 'hours': hours}
+#         task_list.append(task_dict)
 
-    # Call import_tasks with the list of tasks
-    import_tasks(task_list)
+#     # Call import_tasks with the list of tasks
+#     import_tasks(task_list)
 
-    return "Tasks added successfully"
+#     return "Tasks added successfully"
 
 @app.route('/scheduling_tasks', methods=['POST'])
 def scheduling_tasks():
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
   """
-  tasks = request.form.getlist['allSubmissions']
+
+  tasks = request.get_json()
+#   tasks = request.form.getList ['allSubmissions']
   task_list = []
 
   for task_data in tasks:
@@ -61,14 +65,14 @@ def scheduling_tasks():
       priority_str = task_data.get('priority')
       date_str = task_data.get('date')
       hours = task_data.get('hours')
-      date = datetime.strptime(date_str, '%Y-%m-%d').date()
+      date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
 
       # Create a dictionary for each task
       task_dict = {'title': title, 'priority': priority_str, 'date': date, 'hours': hours}
       task_list.append(task_dict)
 
   # Call import_tasks with the list of tasks
-  import_tasks(task_list)
+  # import_tasks(task_list)
   
   timeZone = "US/Eastern"
   today = datetime.datetime.today()
@@ -93,7 +97,7 @@ def scheduling_tasks():
       creds.refresh(Request())
     else:
       flow = InstalledAppFlow.from_client_secrets_file(
-          "credentials.json", SCOPES
+          "./credentials.json", SCOPES
       )
       creds = flow.run_local_server(port=0)
     # Save the credentials for the next run
@@ -183,4 +187,4 @@ def scheduling_tasks():
 
 if __name__ == "__main__":  # true if this file NOT imported
     app.debug = True        # enable auto-reload upon code change
-    app.run(host = '0.0.0.0', port=200)
+    app.run(host = '0.0.0.0', port=4000)
