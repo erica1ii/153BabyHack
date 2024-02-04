@@ -33,11 +33,11 @@ def get_all_tasks():
     tasks = load_tasks_from_json()
     return [task_data['title'] for task_data in tasks]
 
-def get_priority(title):
-    tasks = load_tasks_from_json()
-    for task_data in tasks:
-        if task_data['title'] == title:
-            return task['priority']
+# def get_priority(title):
+#     tasks = load_tasks_from_json()
+#     for task_data in tasks:
+#         if task_data['title'] == title:
+#             return task['priority']
 
 def get_date(title):
     tasks = load_tasks_from_json()
