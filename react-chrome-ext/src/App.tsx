@@ -60,7 +60,7 @@ function MyForm() {
     // }
     try {
       // Send all submissions to the backend
-      await fetch('/scheduling_tasks', {
+      await fetch('http://localhost:4000/scheduling_tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
