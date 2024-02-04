@@ -95,11 +95,11 @@ function MyForm() {
             onChange={(event) => setSelectedOption(event.target.value)}
           >
             <option value="">--Select--</option>
-            <option value="option1">Priority 1</option>
-            <option value="option2">Priority 2</option>
-            <option value="option3">Priority 3</option>
-            <option value="option4">Priority 4</option>
-            <option value="option5">Priority 5</option>
+            <option value="option1">Need to be done ASAP</option>
+            <option value="option2">Very Important!</option>
+            <option value="option3">Important</option>
+            <option value="option4">Not Important</option>
+            <option value="option5">Not a Rush</option>
           </select>
         </label>
         <br />

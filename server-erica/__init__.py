@@ -2,10 +2,6 @@ from flask import Flask, jsonify, render_template, session, request, redirect, u
 from datetime import datetime
 from createjson import *
 import os.path
-<<<<<<< HEAD
-=======
-
->>>>>>> 6f9561e44a9ec9d8791144e3d40d0252da059a27
 
 # from events import eventsToAdd
 # from datetime import datetime
