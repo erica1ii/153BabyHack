@@ -20,8 +20,6 @@ def main():
   Prints the start and name of the next 10 events on the user's calendar.
   """
   
-
-
   timeZone = "US/Eastern"
   today = datetime.datetime.today()
   tomorrowStart = today + timedelta(days = 1)

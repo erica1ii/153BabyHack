@@ -25,7 +25,7 @@ function MyForm() {
 
     try {
       // Send form data to the Flask backend
-      const response = await fetch('/update_tasks', {
+      const response = await fetch('/add_tasks', {
         method: 'POST',
         body: formData
       });
