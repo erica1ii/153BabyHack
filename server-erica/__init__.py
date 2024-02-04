@@ -2,7 +2,6 @@ from flask import Flask, jsonify, render_template, session, request, redirect, u
 from datetime import datetime
 from createjson import *
 import os.path
-import task_tracker
 
 # from events import eventsToAdd
 # from datetime import datetime
