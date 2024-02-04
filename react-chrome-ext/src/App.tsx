@@ -40,7 +40,7 @@ function MyForm() {
     const handleFinalSubmit = async () => {
       try {
         // Send all submissions to the backend
-        const response = await fetch('/update_tasks', {
+        const response = await fetch('/scheduling_tasks', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
