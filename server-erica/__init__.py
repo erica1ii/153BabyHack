@@ -4,7 +4,6 @@ from createjson import *
 import os.path
 from flask_cors import CORS, cross_origin
 
-
 # from events import eventsToAdd
 # from datetime import datetime
 from datetime import timedelta
