@@ -9,17 +9,43 @@ function MyForm() {
   const [name, setName] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
+  const [hoursNeeded, setSelectedHours] = useState(0);
 
   // Handle form submission
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Do something with the form data (e.g., submit it to a server)
-    console.log({ name ,selectedOption, selectedDate});
-    // Clear the form fields
-    setName('');
-    setSelectedOption('');
-    setSelectedDate('');
+    //han
+    const formData = new FormData();
+    formData.append('title', name);
+    formData.append('priority', selectedOption);
+    formData.append('date', selectedDate);
+    formData.append('hours', String(hoursNeeded));
+
+    
+
+    try {
+      // Send form data to the Flask backend
+      const response = await fetch('/update_tasks', {
+        method: 'POST',
+        body: formData
+      });
+
+      // Check if request was successful
+      if (response.ok) {
+        console.log('Form data sent successfully');
+        // Clear form fields
+        setName('');
+        setSelectedOption('');
+        setSelectedDate('');
+        setSelectedHours(0);
+      } else {
+        console.error('Failed to send form data:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error sending form data:', error);
+    }
   };
+
 
   return (
     <form onSubmit={handleSubmit}>
@@ -39,11 +65,11 @@ function MyForm() {
           onChange={(event) => setSelectedOption(event.target.value)}
         >
           <option value="">--Select--</option>
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-          <option value="option4">Option 4</option>
-          <option value="option5">Option 5</option>
+          <option value="option1">Priority 1</option>
+          <option value="option2">Priority 2</option>
+          <option value="option3">Priority 3</option>
+          <option value="option4">Priority 4</option>
+          <option value="option5">Priority 5</option>
         </select>
       </label>
       <br />
@@ -53,6 +79,15 @@ function MyForm() {
           type="date"
           value={selectedDate}
           onChange={(event) => setSelectedDate(event.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Hours:
+        <input
+          type="number" // Use type "number" for integer input
+          value={hoursNeeded}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSelectedHours(parseInt(event.target.value))}
         />
       </label>
       <br />
